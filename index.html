@@ -1,0 +1,338 @@
+
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title> Simulador de Azulejos </title>
+
+    <!-- Scripts -->
+    <script src="./js/simulador.js" ></script>
+    <script src="./js/wizard.js" ></script>
+     
+
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+
+    <!-- Styles -->
+    
+   <!-- <link href="./css/app.css" rel="stylesheet">   -->
+    
+     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+   <!-- <link href="./css/wizard.css" rel="stylesheet">  -->
+  
+  <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+ <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() 
+{
+	
+
+	$("svg").click(function() 
+	{
+		$( this ).toggleClass( "unselected selected" );
+	}); 
+	
+	 //Initialize tooltips
+    $('.nav-tabs > li a[title]').tooltip();
+    
+    //Wizard
+    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+        var $target = $(e.target);
+        if ($target.parent().hasClass('disabled')) {
+            return false;
+        }
+    });
+    
+    
+    $(document).on('change', '.btn-file :file', function() 
+    	{
+		var input = $(this),
+			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+		input.trigger('fileselect', [label]);
+		});
+
+		$('.btn-file :file').on('fileselect', function(event, label)
+		 {
+		    
+		    var input = $(this).parents('.input-group').find(':text'),
+		        log = label;
+		    
+		    if( input.length ) {
+		        input.val(log);
+		    } else {
+		        if( log ) alert(log);
+		    }
+	    
+		});
+		
+		function readURL(input) 
+		{
+		    if (input.files && input.files[0]) {
+		        var reader = new FileReader();
+		        
+		        reader.onload = function (e) {
+		            $('#img-upload').attr('src', e.target.result);
+		        }
+		        
+		        reader.readAsDataURL(input.files[0]);
+		    }
+		}
+
+		$("#imgInp").change(function()
+		{
+		    readURL(this);
+		});
+});
+
+</script>
+</head>
+<body>
+	            
+
+				<!-- Write your comments here -->
+			<table style="width: 1300px;height:  670px ;border: solid thin; color: gray;">
+					<colgroup>
+					<col style="width: 600px">
+					<col style="width: 250px">
+					<col style="width: 350px">
+					</colgroup>
+					
+					<!-- primera fila gris   -->
+					
+					<tr bgcolor="gainsboro" style="border: solid thin; color: gray">
+						<td height="25" ></td>
+						<td ></td>
+						<td ></td>
+					</tr>
+					
+					<!-- 2da fila     -->
+						
+					<tr style="border: solid thin; color: gray">
+						<td height="55">
+						<h3  style="color: black ;text-align: left;font-weight: 300; bold;font-family: 'Arial' ">   
+							SIMULADOR MOSAICOS versión:1.0 </h3>
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+					
+					<!-- 3ra franja gris   -->
+					
+					<tr bgcolor="gainsboro" style="border: solid thin; color: gray">
+						<td height="25" ></td>
+						<td ></td>
+						<td ></td>
+					</tr>
+					
+					<!-- 4ta franja   -->
+					
+					
+					<tr style="border: solid thin; color: gray">
+						
+						<!-- celda de resultado final  -->
+						<td height="400" valign="top" style="border: solid thin; color: gray">
+																
+							<button onclick="foto_aplicar_clip_path()"type="button" class="btn btn-primary btn-lg" 
+								data-toggle="modal" data-target="#myModal">
+										Clip foto
+										</button> 
+							<!-- Modal -->
+							<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+							<div class="modal-dialog modal-lg" role="document">
+							<div height="80%" class="modal-content">
+							<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel"></h4>
+							</div>
+							<div style="height: 520px" class="modal-body">
+																	<canvas id="canvas_final" width="550px" height="500px" onclick="storepath()" 
+																				style="left :200px;z-index: 2;position:absolute;border:1px solid #d3d3d3;">
+																		</canvas>
+																		<canvas id="canvas_final2"  width="550px" height="365px" 
+																				onclick="storepath()" 
+																			style="left :200px;top:150px;z-index: 1;position:absolute;border:1px solid #d3d3d3;">
+																		</canvas>	
+							</div>
+							<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+							</div>
+							</div>
+							</div>
+							</div>
+								
+
+							<form>
+									<label class="radio-inline">
+									<input id="fotosistema" type="radio" name="optradio" onclick="foto_sistema()" checked>
+									Imágenes prediseñadas
+									</label>
+									<label class="radio-inline">
+									<input id="fotousuario" type="radio" name="optradio" onclick="foto_personalizada()" >
+									Imágenes personalizadas
+									</label>
+									<div id="archivousuario" style="position:relative;height: 100%">
+										 <div class="form-group">
+											<label>Upload Image</label>
+											<div class="input-group">
+												<span class="input-group-btn">
+													<span class="btn btn-default btn-file">
+														Browse… <input type="file" id="imgInp">
+													</span>
+												</span>
+												<input type="text" class="form-control" readonly>
+											</div>
+											<img id='img-upload' heigth="100px" onclick="imagen_sist_selecc('img-upload')"/>
+										</div>
+										
+									</div>
+									</form> 
+							
+									<div id="imagenes_lista" style="position:relative;height: 100%">
+										
+									</div>
+  					
+						</td>
+						
+						<!--     Panel de envío email                              -->
+						
+						<td valign="top" align="center" style="border: solid thin; color: gray" >
+							
+						</td>
+						
+						<!-- celda ladrillo a usar   -->
+						
+						<td width="300" valign="top" align="center" style="border: solid thin; color: gray">
+							<h5 style="color: black">Mis diseños:</h5>
+							<p>Ladrillo a usar:</p>
+							<canvas id="canvas_color_final" width="400" height="400" style="border:1px solid #d3d3d3;">
+							</canvas>
+							
+						</td>
+					</tr>
+					
+					<!-- 5ta franja  -->
+					
+					<tr style="border: solid thin; color: gray">
+						
+						<!-- Celda de diseños de ladrillos  -->
+						<td heigth="200" valign="top" style="border: solid thin;">
+							<h5 style="color: black">Escoja un diseño: </h5>
+							<div id="mosaicos">
+							<table style="width: 600x">
+							<colgroup>
+							<col style="width: 600px">
+							</colgroup>
+							<tr>
+								<td id="contenedor_estilo_ladrillo">
+								</td>
+							</tr>
+							<tr>
+								<!--  Celda  Imágenes de Cocinas, Salas, Cuartos -->
+								<td >
+									
+		
+								</td>
+							</tr>
+							</table>
+							</div>
+						</td>
+						<td heigth="260" valign="top" style="border: solid thin;">
+							<div >
+							<table style="table-layout:fixed;width: 250px">
+							<colgroup>
+							<col style="width: 250px">
+							</colgroup>
+							<tr >
+								
+								<!--   Paleta de Colores -->
+								<td valign="top" height="300" style="word-wrap:break-word;">
+								<svg id="paleta_col" viewBox="0 0 100 203" xmlns="http://www.w3.org/2000/svg">
+									
+                                <circle id="green" onclick="clic_paleta(this.id)"  cx="25" cy="25" r="5" stroke="green" fill="green" stroke-width="5"/>
+                                
+								<circle id="indigo" onclick="clic_paleta(this.id)" cx="25" cy="25" r="5" stroke="indigo" fill="indigo" stroke-width="5"
+								 transform="translate(0,20)"  />
+								 
+								<circle id="firebrick" onclick="clic_paleta(this.id)"  cx="25" cy="25" r="5" stroke="firebrick" fill="firebrick" stroke-width="5"
+								transform="translate(0,40)"  />
+								
+     							<circle id="gold" onclick="clic_paleta(this.id)"  cx="25" cy="25" r="5" stroke="gold" fill="gold" stroke-width="5"
+	     						transform="translate(0,60)"   />
+	     						
+	     						<circle id="olive" onclick="clic_paleta(this.id)" cx="25" cy="25" r="5" stroke="olive" fill="olive" stroke-width="5"
+	     						transform="translate(0,80)"   />
+	     						
+	     						   <circle id="darkslategray" onclick="clic_paleta(this.id)" cx="25" cy="25" r="5" stroke="darkslategray" fill="darkslategray" stroke-width="5"
+                                transform="translate(0,100)"  />
+                                
+                                  <circle id="teal" onclick="clic_paleta(this.id)" cx="25" cy="25" r="5" stroke="teal" fill="teal" stroke-width="5"
+                                transform="translate(0,120)"  />
+                                
+                                <circle id="cadetblue" onclick="clic_paleta(this.id)" cx="25" cy="25" r="5" stroke="cadetblue" fill="cadetblue" stroke-width="5"
+                                transform="translate(0,140)"  />
+	     						
+								<circle id="orange" onclick="clic_paleta(this.id)"  cx="25" cy="25" r="5" stroke="orange" fill="orange" stroke-width="5"
+								transform="translate(40,0)"   />
+								
+								<circle id="pink"onclick="clic_paleta(this.id)"  cx="25" cy="25" r="5" stroke="pink" fill="pink" stroke-width="5"
+								transform="translate(40,20)" 	  />
+								
+								<circle id="gray" onclick="clic_paleta(this.id)"  cx="25" cy="25" r="5" stroke="gray" fill="gray" stroke-width="5"
+                                transform="translate(40,40)"  />
+                                
+                                <circle id="darkolivegreen" onclick="clic_paleta(this.id)" cx="25" cy="25" r="5" stroke="darkolivegreen" fill="darkolivegreen" stroke-width="5"
+                                transform="translate(40,60)"  />
+                                
+                                <circle id="deeppink" onclick="clic_paleta(this.id)" cx="25" cy="25" r="5" stroke="deeppink" fill="deeppink" stroke-width="5"
+                                transform="translate(40,80)"  />
+                                
+                                 <circle id="darkred" onclick="clic_paleta(this.id)" cx="25" cy="25" r="5" stroke="darkred" fill="darkred" stroke-width="5"
+                                transform="translate(40,100)"  />
+                                
+                                  <circle id="crimson" onclick="clic_paleta(this.id)" cx="25" cy="25" r="5" stroke="crimson" fill="crimson" stroke-width="5"
+                                transform="translate(40,120)"  />
+                                
+                                <circle id="lightsalmon" onclick="clic_paleta(this.id)" cx="25" cy="25" r="5" stroke="lightsalmon" fill="lightsalmon" stroke-width="5"
+                                transform="translate(40,140)"  />
+                                
+								</svg>
+								</td>
+							</tr>
+							</table>
+							</div>
+										
+						</td>
+						
+						<!--   Diseño de ladrillo a colorear    -->
+						<td  width="300"  valign="top" style="border: solid thin;" >
+							<div id="ladrillo_colorear" width="100%">
+							</div>
+							<img id="imagen_temp" width="400" heigth="400" style="display: none;">
+							
+						</td>
+					</tr>
+
+			</table>
+			<img id="foto" width="500" heigth="350" style="display: none">
+			<img x="0" y="10" id="foto_final" width="450" heigth="400" style="display: none;">
+            <svg id="svg1" style="display: none;">
+            </svg>
+            <canvas id="canvastest1"  width="550" height="550" style="display: none;"></canvas>
+            <canvas id="canvastest2"  width="550" height="550" style="display: none;"></canvas>
+            <canvas id="canvastest3"  width="550" height="550" style="display: none;"></canvas>
+            <canvas id="canvastest4"  width="550" height="550" style="display: none;"></canvas>
+            
+            <canvas id="canvastestf"  width="420" height="420" ></canvas>   
+            <canvas id="canvasnew"    width="420" height="420" style="display: none;"></canvas>   
+
+</body>
+</html>

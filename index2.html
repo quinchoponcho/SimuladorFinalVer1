@@ -1,0 +1,93 @@
+
+
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title> Simulador de Azulejos </title>
+
+    <!-- Scripts -->
+    <script src="./js/simulador.js" ></script>
+    <script src="./js/wizard.js" ></script>
+     
+
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+
+    <!-- Styles -->
+    
+   <!-- <link href="./css/app.css" rel="stylesheet">   -->
+    
+     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+   <!-- <link href="./css/wizard.css" rel="stylesheet">  -->
+  
+  <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+ <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	
+	
+var svg = document.querySelector('svg');
+var img = document.querySelector('img');
+var canvas = document.querySelector('canvas');
+
+// get svg data
+var xml = new XMLSerializer().serializeToString(svg);
+
+// make it base64
+var svg64 = btoa(xml);
+var b64Start = 'data:image/svg+xml;base64,';
+
+// prepend a "header"
+var image64 = b64Start + svg64;
+
+// set it as the source of the img element
+img.src = image64;
+
+// draw the image onto the canvas
+canvas.getContext('2d').drawImage(img, 0, 0);
+
+function dlCanvas() {
+  var dt = canvas.toDataURL('image/png'); // << this fails in IE/Edge...
+  dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
+  dt = dt.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png');
+  this.href = dt;
+};
+document.getElementById('dl').addEventListener('click', dlCanvas, false);
+	
+	
+	</script>
+</head>
+<body>
+	            
+SVG
+<svg height="100">
+  <rect width="40" height="50" style="fill:blue;" />
+  <rect width="20" height="80" style="fill:red;" />
+  <circle r="20" cx="50" cy="50" style="fill:yellow;" />
+</svg>
+
+IMAGE
+<img/>
+
+CANVAS
+<canvas></canvas>
+
+<a id="dl" download="Canvas.png" href="#">Download Canvas</a>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
